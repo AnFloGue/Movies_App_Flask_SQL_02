@@ -21,8 +21,8 @@ class SQLiteDataManager(DataManagerInterface):
 
     def update_movie(self, movie):
         self.db.session.commit()
-
+    
     def delete_movie(self, movie_id):
         movie = Movie.query.get(movie_id)
         self.db.session.delete(movie)
-        self.db.sess
+        self.db.session.commit()

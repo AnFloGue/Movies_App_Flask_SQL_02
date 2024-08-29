@@ -16,7 +16,6 @@ data_manager = SQLiteDataManager(app)
 
 logging.basicConfig(level=logging.DEBUG)
 
-# app.py
 @app.route('/')
 def home():
     return render_template('index.html')
