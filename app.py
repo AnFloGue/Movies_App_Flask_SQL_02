@@ -16,9 +16,10 @@ data_manager = SQLiteDataManager(app)
 
 logging.basicConfig(level=logging.DEBUG)
 
+# app.py
 @app.route('/')
 def home():
-    return "Welcome to MovieWeb App!"
+    return render_template('index.html')
 
 @app.route('/users')
 def list_users():
