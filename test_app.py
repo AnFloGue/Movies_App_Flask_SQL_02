@@ -27,3 +27,4 @@ def test_404_error(client):
     response = client.get('/non_existent_page')
     assert response.status_code == 404
     assert b'Page Not Found' in response.data
+
