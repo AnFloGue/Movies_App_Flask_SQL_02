@@ -86,3 +86,11 @@ This class manages interactions with the SQLite database, including CRUD operati
 - **URL**: `/users/<int:user_id>/delete_movie/<int:movie_id>`
 - **Method**: GET
 - **Description**: Deletes a specific movie from a user's list.
+
+### Error Handling
+
+#### 404 Error
+- **URL**: Any non-existent route
+- **Method**: GET
+- **Description**: Displays a custom 404 error page.
+
