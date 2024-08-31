@@ -7,9 +7,9 @@
     <h1>Users</h1>
     <ul>
         {% for user in users %}
-            <li><a href="{{ url_for('user_movies', user_id=user.id) }}">{{ user.name }}</a></li>
+            <li>{{ user.name }}</li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('add_user') }}">Add User</a>
+    <a href="{{ url_for('home') }}">home</a>
 </body>
 </html>
