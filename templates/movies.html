@@ -2,17 +2,20 @@
 <html>
 <head>
     <title>Movies - MovieWeb App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Movies</h1>
-    <ul>
-        {% for movie in movies %}
-            <li>{{ movie.name }} - {{ movie.director }} ({{ movie.year }}) - Rating: {{ movie.rating }}
-                <a href="{{ url_for('update_movie', user_id=user_id, movie_id=movie.movie_id) }}">Edit</a>
-                <a href="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.movie_id) }}">Delete</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('home') }}">home</a>
+    <div class="container">
+        <h1 class="mt-5">Movies</h1>
+        <ul class="list-group mt-3">
+            {% for movie in movies %}
+                <li class="list-group-item">{{ movie.name }} - {{ movie.director }} ({{ movie.year }}) - Rating: {{ movie.rating }}
+                    <a href="{{ url_for('update_movie', user_id=user_id, movie_id=movie.movie_id) }}" class="btn btn-primary btn-sm ml-2">Edit</a>
+                    <a href="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.movie_id) }}" class="btn btn-danger btn-sm ml-2">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary mt-3">Home</a>
+    </div>
 </body>
 </html>
