@@ -8,8 +8,8 @@
     <ul>
         {% for movie in movies %}
             <li>{{ movie.name }} - {{ movie.director }} ({{ movie.year }}) - Rating: {{ movie.rating }}
-                <a href="{{ url_for('update_movie', user_id=user_id, movie_id=movie.id) }}">Edit</a>
-                <a href="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">Delete</a>
+                <a href="{{ url_for('update_movie', user_id=user_id, movie_id=movie.movie_id) }}">Edit</a>
+                <a href="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.movie_id) }}">Delete</a>
             </li>
         {% endfor %}
     </ul>

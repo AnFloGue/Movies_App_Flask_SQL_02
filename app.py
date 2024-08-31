@@ -23,15 +23,14 @@ def home():
 @app.route('/users')
 def list_users():
     users = data_manager.get_all_users()
-    for user in users:
-        print(f"User: {user.name}")
     return render_template('users.html', users=users)
 
 @app.route('/users/<int:user_id>')
 def user_movies(user_id):
     user = data_manager.get_user_by_id(user_id)
     if not user:
-        print(f"User not found: {user.name}")
+        logging.error(f"User not found: {user_id}")
+        return "User not found", 404
     movies = data_manager.get_user_movies(user_id)
     return render_template('movies.html', movies=movies, user_id=user_id)
 
