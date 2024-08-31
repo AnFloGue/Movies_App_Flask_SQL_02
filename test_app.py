@@ -4,34 +4,56 @@ from models import User, Movie
 
 class MovieWebAppTestCase(unittest.TestCase):
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-        self.app = app.test_client()
-        db.create_all()
+        self.app = app.test_client()  # Create a test client for making requests
+        self.app_context = app.app_context()
+        self.app_context.push()
+        app.config['TESTING'] = True  # Enable testing mode for the app
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/antoniofloresguerrero/PycharmProjects/_MasterSchool/GitHub/To_Github/Movies_App_Flask_SQL_02/instance/moviwebapp.db'
+        db.create_all()  # Create all database tables (if they don't exist)
+
+        # Create a user object before accessing its id
+        self.user = User(name='Test User')
+        db.session.add(self.user)
+        db.session.commit()  # Commit changes to the database
 
     def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+        db.session.remove()  # Remove objects from the session
+        db.drop_all()  # Drop all database tables
+        self.app_context.pop()  # Pop the app context
 
     def test_home_page(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Welcome to MovieWeb App!', response.data)
+        response = self.app.get('/')  # Send a GET request to the homepage
+        self.assertEqual(response.status_code, 200)  # Check for successful response
+        self.assertIn(b'Welcome to MovieWeb App!', response.data)  # Check for content
 
     def test_add_user(self):
-        response = self.app.post('/add_user', data=dict(name='Test User'))
+        # Test with an empty name
+        response = self.app.post('/add_user', data=dict(name=''))  # POST with empty name
+        self.assertEqual(response.status_code, 400)  # Expect 400 for missing name
+        self.assertIn(b'Name is required', response.data)  # Check for error message
+
+        # Test with a valid name (using the pre-created user)
+        response = self.app.post('/add_user', data=dict(name=self.user.name))  # POST with valid name
         self.assertEqual(response.status_code, 302)  # Redirect after adding user
-        user = User.query.filter_by(name='Test User').first()
-        self.assertIsNotNone(user)
 
     def test_add_movie(self):
-        user = User(name='Test User')
-        db.session.add(user)
-        db.session.commit()
-        response = self.app.post(f'/add_movie/{user.id}', data=dict(name='Test Movie', director='Test Director', year=2021, rating=5))
-        self.assertEqual(response.status_code, 302)  # Redirect after adding movie
+        # Verify the user was added
+        self.assertIsNotNone(User.query.filter_by(name=self.user.name).first())
+
+        # Send a POST request to add a movie for the created user
+        response = self.app.post(f'/users/{self.user.id}/add_movie', data=dict(
+            name='Test Movie',
+            director='Test Director',
+            year=2021,
+            rating=5
+        ))
+
+        # Check if the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Verify the movie was added to the database
         movie = Movie.query.filter_by(name='Test Movie').first()
         self.assertIsNotNone(movie)
-
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual(movie.director, 'Test Director')
+        self.assertEqual(movie.year, 2021)
+        self.assertEqual(movie.rating, 5)
